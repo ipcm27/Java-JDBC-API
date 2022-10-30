@@ -11,7 +11,7 @@ public class TestServices {
 
         //  manager.createProduct("Home Connecta Flexi 100GB","50 GBAnytime Data, 50 GBNite Data, 30 Day Validity", 199L);
 
-        manager.deleteProductFromId(7);
+        //manager.deleteProductFromId(7);
         manager.getAllProducts();
 
     }

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Prepaid-cellphone-plans-API&lt;" />
         <module name="Cell-C-HomeConecta-API" />
+        <module name="Prepaid-cellphone-plans-API" />
       </profile>
     </annotationProcessing>
   </component>

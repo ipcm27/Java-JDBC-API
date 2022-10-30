@@ -1,8 +1,9 @@
 package com.company.test;
 
-import com.comapany.repository.ConnectionFactory;
 
 import java.sql.*;
+
+import com.company.repository.ConnectionFactory;
 
 public class TestList {
 

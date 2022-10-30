@@ -1,58 +1,51 @@
 package com.company.services;
 
-import com.comapany.repository.ConnectionFactory;
+import com.company.dao.ProductDAO;
+import com.company.model.Product;
+import com.company.repository.ConnectionFactory;
+
 
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+
+
 import java.sql.ResultSet;
 
 public class ProductManager {
 
-    private final Connection connection;
+    private Connection connection;
     private PreparedStatement preparedStatement;
+    private ProductDAO productDAO;
 
-    public ProductManager() throws SQLException {
-        this.connection = ConnectionFactory.connect();
-    }
+  
 
     public void getAllProducts() throws SQLException {
+    	try{
+			productDAO.listAll();
+			
+		}
+		catch(Exception e) {
+			System.out.println("trying to get on the service.Got exception: " + e);
+			
+		}
 
-        preparedStatement = connection.prepareStatement("select ID,NAME,DESCRIPTION,PRICE FROM PRODUCT");
-        preparedStatement.execute();
-
-        ResultSet rst =   preparedStatement.getResultSet();
-
-        while(rst.next()){
-            Integer id = rst.getInt("ID");
-            System.out.println(id);
-            String name = rst.getString("NAME");
-            System.out.println(name);
-            String description= rst.getString("DESCRIPTION");
-            System.out.println(description);
-            Long price = rst.getLong("PRICE");
-            System.out.println(price);
-            System.out.println("----------");
-        }
+     
     }
 
-    public void createProduct(String name, String description, Long price) throws SQLException{
+    public Product createProduct(Product product) throws SQLException{
         // this.stm.execute("INSERT INTO PRODUCT (name, description,price) VALUES ('"+ name + "', '"+ description + " ',"+ price + ");", Statement.RETURN_GENERATED_KEYS);
-        preparedStatement = connection.prepareStatement("INSERT INTO PRODUCT (name, description,price) VALUES(?,?,?)", preparedStatement.RETURN_GENERATED_KEYS );
-
-        preparedStatement.setString(1,name);
-        preparedStatement.setString(2,description);
-        preparedStatement.setLong(3,price);
-
-        preparedStatement.execute();
-
-        ResultSet rst = preparedStatement.getGeneratedKeys();
-
-        while(rst.next()){
-            Integer id = rst.getInt(1);
-            System.out.println("The created id was " + id);
-        }
-
+        
+    		try{
+    			productDAO.create(product);
+    			return product;
+    		}
+    		catch(Exception e) {
+    			System.out.println("trying to get on the service.Got exceptio:" + e);
+    			return product;
+    		}
+    	
 
     }
 
@@ -61,6 +54,5 @@ public class ProductManager {
         preparedStatement.setInt(1, id);
         preparedStatement.execute();
         preparedStatement.getUpdateCount();
-
     }
 }

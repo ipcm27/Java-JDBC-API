@@ -1,9 +1,10 @@
 package com.company.test;
 
-import com.comapany.repository.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.company.repository.ConnectionFactory;
 
 public class TestConnection {
 
