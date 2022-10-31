@@ -34,8 +34,8 @@ public class CategoryDAO {
 					
 					
 					categorys.add(category);
-					return categorys;
-				}
+					
+				}return categorys;
 			}
 			
 		} catch (SQLException e) {
@@ -46,5 +46,28 @@ public class CategoryDAO {
 		
 	}
 	
+	public List <Category> listWithProduct() throws SQLException {
+		Category last = null;
+		List<Category> categories = new ArrayList<>();
+		
+		String sql = "SELECT C.ID, C.NAME, P.ID, P.NAME, P.DESCRIPTION FROM CATEGORY C INNER JOIN PRODUCT P ON C.ID = P.CATEGORY_ID";
+		
+		try(PreparedStatement pstm = connection.prepareStatement(sql)){
+			pstm.execute();
+			
+			try(ResultSet rst = pstm.getResultSet()){
+				while(rst.next()) {
+					if(last == null || !last.getName().equals(rst.getString(2))) {
+						Category category = new Category(rst.getInt(1), rst.getString(2));
+						
+						categories.add(category);
+						last = category;
+					}
+				}
+				return categories;
+			}
+		}
+		
+	}
+		};
 
-}

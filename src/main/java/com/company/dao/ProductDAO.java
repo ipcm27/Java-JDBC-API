@@ -12,6 +12,10 @@ import com.company.repository.ConnectionFactory;
 
 public class ProductDAO {
 	
+	public  ProductDAO(Connection connection) {
+		this.connection = connection;
+	}
+	
 	private static Connection connection;
 	private PreparedStatement preparedStatement;
 	
@@ -38,55 +42,76 @@ public class ProductDAO {
 	    	}
 	}
 
-	public void listAllOLd() throws SQLException {
-
-
-    preparedStatement = connection.prepareStatement("select ID,NAME,DESCRIPTION,PRICE FROM PRODUCT");
-    preparedStatement.execute();
-
-    ResultSet rst =   preparedStatement.getResultSet();
-
-    while(rst.next()){
-        Integer id = rst.getInt("ID");
-        System.out.println(id);
-        String name = rst.getString("NAME");
-        System.out.println(name);
-        String description= rst.getString("DESCRIPTION");
-        System.out.println(description);
-        Long price = rst.getLong("PRICE");
-        System.out.println(price);
-        System.out.println("----------");
-    }
-
-}
-	
-	public static List<Product> listAll(){
+	public static List<Product> list() throws SQLException{
 		List<Product> products = new ArrayList<Product>();
-		
 		String sql = "select ID,NAME,DESCRIPTION,PRICE FROM PRODUCT";
 		
-		try(PreparedStatement pstm = connection.prepareStatement(sql)){
-			
+		try(PreparedStatement pstm = connection.prepareStatement(sql)) {
 			pstm.execute();
-			
-			try(ResultSet rst = pstm.getResultSet()) {
-				
-				while(rst.next()) {
-					Product product = new Product(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getLong(4));
-					
-					products.add(product);
-					return products;
-				}
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			tranformResultInProducts(products, pstm);
 		}
-		
 		return products;
 		
 	}
 
+	public static List<Product> ListByCategory() throws SQLException{
+		List<Product> products = new ArrayList<Product>();
+		
+		String sql = "select ID,NAME,DESCRIPTION,PRICE FROM PRODUCT where CATEGORY_id = ? ";
+		
 
+		try(PreparedStatement pstm = connection.prepareStatement(sql)) {
+			pstm.execute();
+
+			tranformResultInProducts(products, pstm);
+		}
+		
+		return products;
+	}	
+	
+	public void listPrintingOnConsole() throws SQLException {
+
+
+
+	    preparedStatement = connection.prepareStatement("select ID,NAME,DESCRIPTION,PRICE FROM PRODUCT");
+	    preparedStatement.execute();
+
+	    ResultSet rst =   preparedStatement.getResultSet();
+
+	    while(rst.next()){
+	        Integer id = rst.getInt("ID");
+	        System.out.println(id);
+	        String name = rst.getString("NAME");
+	        System.out.println(name);
+	        String description= rst.getString("DESCRIPTION");
+	        System.out.println(description);
+	        Long price = rst.getLong("PRICE");
+	        System.out.println(price);
+	        System.out.println("----------");
+	    }
+
+	}
+		
+	public static void tranformResultInProducts(List<Product> products, PreparedStatement pstm) throws SQLException {
+		try(ResultSet rst = pstm.getResultSet()) {
+			
+			
+			while(rst.next()) {
+				
+				Product product = new Product(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getLong(4));
+				
+				products.add(product);
+				
+			}
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+		
+	
 }

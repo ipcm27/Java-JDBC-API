@@ -12,6 +12,8 @@ public class Category {
 		this.name = name;
 	}
 	
+	
+
 	public int getId() {
 		return id;
 	}
